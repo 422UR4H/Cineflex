@@ -1,26 +1,32 @@
 import styled from "styled-components";
+import axios from "axios";
+import { URL_MOVIES } from "../../scripts/constants";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 
 export default function HomePage() {
+    const [movies, setMovies] = useState([]);
+
+    useEffect(() => {
+        const promise = axios.get(URL_MOVIES);
+
+        promise.then(({ data }) => setMovies(data));
+        promise.catch((error) => console.log(error));
+    }, []);
+
     return (
         <PageContainer>
             Selecione o filme
 
             <ListContainer>
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </MovieContainer>
+                {movies.map((m) =>
+                    <Link key={m.id} to="/session">
+                        <MovieContainer>
+                            <img src={m.posterURL} alt={m.title} />
+                        </MovieContainer>
+                    </Link>
+                )}
             </ListContainer>
 
         </PageContainer>
