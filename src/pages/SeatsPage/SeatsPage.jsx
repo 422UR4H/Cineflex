@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export default function SeatsPage() {
@@ -36,7 +37,9 @@ export default function SeatsPage() {
                 CPF do Comprador:
                 <input placeholder="Digite seu CPF..." />
 
-                <button>Reservar Assento(s)</button>
+                <Link to="/success">
+                    <button>Reservar Assento(s)</button>
+                </Link>
             </FormContainer>
 
             <FooterContainer>

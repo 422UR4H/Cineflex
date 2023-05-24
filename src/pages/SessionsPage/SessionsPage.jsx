@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export default function SessionsPage() {
@@ -9,8 +10,12 @@ export default function SessionsPage() {
                 <SessionContainer>
                     Sexta - 03/03/2023
                     <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
+                        <Link to="/seats">
+                            <button>14:00</button>
+                        </Link>
+                        <Link to="/seats">
+                            <button>15:00</button>
+                        </Link>
                     </ButtonsContainer>
                 </SessionContainer>
 
