@@ -12,7 +12,7 @@ export default function HomePage() {
         const promise = axios.get(URL_MOVIES);
 
         promise.then(({ data }) => setMovies(data));
-        promise.catch((error) => console.log(error));
+        promise.catch((error) => console.log(error.response.data));
     }, []);
 
     return (
@@ -21,7 +21,7 @@ export default function HomePage() {
 
             <ListContainer>
                 {movies.map((m) =>
-                    <Link key={m.id} to="/session">
+                    <Link key={m.id} to={`/session/${m.id}`}>
                         <MovieContainer>
                             <img src={m.posterURL} alt={m.title} />
                         </MovieContainer>
