@@ -7,6 +7,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+
 export default function App() {
     const [booking, setBooking] = useState({});
     
@@ -20,9 +21,9 @@ export default function App() {
 
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/seats/:id" element={<SeatsPage setBooking={setBooking} />} />
-                <Route path="/session/:id" element={<SessionsPage />} />
-                <Route path="/success" element={<SuccessPage booking={booking} />} />
+                <Route path="/assentos/:id" element={<SeatsPage setBooking={setBooking} />} />
+                <Route path="/sessoes/:id" element={<SessionsPage />} />
+                <Route path="/sucesso" element={<SuccessPage booking={booking} />} />
             </Routes>
         </BrowserRouter>
     );

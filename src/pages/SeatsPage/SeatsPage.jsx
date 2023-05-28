@@ -13,6 +13,7 @@ import {
 } from "../../scripts/constants";
 import { useNavigate } from "react-router-dom";
 
+
 export default function SeatsPage({ setBooking }) {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -82,7 +83,7 @@ export default function SeatsPage({ setBooking }) {
             client: { name: name, cpf: cpf }
         });
 
-        navigate(`/success`);
+        navigate(`/sucesso`);
     }
 
     if (!seats) {

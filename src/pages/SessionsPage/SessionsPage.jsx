@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { URL_MOVIES } from "../../scripts/constants";
 
+
 export default function SessionsPage() {
     const { id } = useParams();
     const [days, setDays] = useState(undefined);
@@ -32,7 +33,7 @@ export default function SessionsPage() {
                         {d.weekday} - {d.date}
                         <ButtonsContainer>
                             {d.showtimes.map((s) => (
-                                <Link key={s.id} to={`/seats/${s.id}`}>
+                                <Link key={s.id} to={`/assentos/${s.id}`}>
                                     <button data-test="showtime">{s.name}</button>
                                 </Link>
                             ))}
