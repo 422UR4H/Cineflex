@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { URL_SEATS, URL_SHOWTIMES } from "../../scripts/constants";
 import {
     BACKGROUND_COLOR_SELECTED,
@@ -13,11 +13,12 @@ import {
 } from "../../scripts/constants";
 import { useNavigate } from "react-router-dom";
 
-export default function SeatsPage() {
+export default function SeatsPage({ setBooking }) {
     const navigate = useNavigate();
     const { id } = useParams();
     const [seats, setSeats] = useState(undefined);
     const [footer, setFooter] = useState(undefined);
+    const [movie, setMovie] = useState({});
     const [name, setName] = useState("");
     const [cpf, setCpf] = useState("");
 
@@ -38,6 +39,12 @@ export default function SeatsPage() {
                 weekday: data.day.weekday,
                 time: data.name
             });
+
+            setMovie({
+                title: data.movie.title,
+                date: data.day.date,
+                time: data.name
+            });
         });
         promise.catch((error) => console.log(error.response.data));
     }, []);
@@ -56,9 +63,11 @@ export default function SeatsPage() {
         e.preventDefault();
 
         const idsSelected = [];
+        const seatsSelected = [];
         seats.forEach((s) => {
             if (s.isSelected) {
                 idsSelected.push(s.id);
+                seatsSelected.push(s.name);
             }
         });
 
@@ -67,7 +76,13 @@ export default function SeatsPage() {
             name: name,
             cpf: cpf
         });
-        navigate("/success");
+        setBooking({
+            movie,
+            seats: seatsSelected,
+            client: { name: name, cpf: cpf }
+        });
+
+        navigate(`/success`);
     }
 
     if (!seats) {
