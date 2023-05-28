@@ -2,12 +2,25 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { URL_SHOWTIMES } from "../../scripts/constants";
+import { URL_SEATS, URL_SHOWTIMES } from "../../scripts/constants";
+import {
+    BACKGROUND_COLOR_SELECTED,
+    BACKGROUND_COLOR_AVAILABLE,
+    BACKGROUND_COLOR_UNAVAILABLE,
+    BORDER_COLOR_SELECTED,
+    BORDER_COLOR_AVAILABLE,
+    BORDER_COLOR_UNAVAILABLE
+} from "../../scripts/constants";
+import { useNavigate } from "react-router-dom";
 
 export default function SeatsPage() {
+    const navigate = useNavigate();
     const { id } = useParams();
     const [seats, setSeats] = useState(undefined);
     const [footer, setFooter] = useState(undefined);
+    const [name, setName] = useState("");
+    const [cpf, setCpf] = useState("");
+
 
     useEffect(() => {
         const promise = axios.get(`${URL_SHOWTIMES}/${id}/seats`);
@@ -39,6 +52,24 @@ export default function SeatsPage() {
         setSeats(temp);
     }
 
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const idsSelected = [];
+        seats.forEach((s) => {
+            if (s.isSelected) {
+                idsSelected.push(s.id);
+            }
+        });
+
+        axios.post(URL_SEATS, {
+            ids: idsSelected,
+            name: name,
+            cpf: cpf
+        });
+        navigate("/success");
+    }
+
     if (!seats) {
         return <>Carregando...</>;
     }
@@ -50,36 +81,57 @@ export default function SeatsPage() {
             <SeatsContainer>
                 {seats.map((s, i) => (
                     <SeatItem disabled={!s.isAvailable} isSelected={s.isSelected} key={s.id}>
-                        <span disabled={!s.isAvailable} onClick={(() => select(s, i))}>{s.name}</span>
+                        <span disabled={!s.isAvailable} onClick={(() => select(s, i))}>
+                            {s.name}
+                        </span>
                     </SeatItem>
                 ))}
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle backgroundColor={"#1AAE9E"} borderColor={"#0E7D71"} />
+                    <CaptionCircle
+                        backgroundColor={BACKGROUND_COLOR_SELECTED}
+                        borderColor={BORDER_COLOR_SELECTED}
+                    />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle backgroundColor={"#C3CFD9"} borderColor={"#7B8B99"} />
+                    <CaptionCircle
+                        backgroundColor={BACKGROUND_COLOR_AVAILABLE}
+                        borderColor={BORDER_COLOR_AVAILABLE}
+                    />
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle backgroundColor={"#FBE192"} borderColor={"#F7C52B"} />
+                    <CaptionCircle
+                        backgroundColor={BACKGROUND_COLOR_UNAVAILABLE}
+                        borderColor={BORDER_COLOR_UNAVAILABLE}
+                    />
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+            <FormContainer onSubmit={handleSubmit}>
+                <label htmlFor="name">Nome do Comprador:</label>
+                <input id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Digite seu nome..."
+                    required
+                />
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                <label htmlFor="cpf">CPF do Comprador:</label>
+                <input id="cpf"
+                    type="number"
+                    value={cpf}
+                    onChange={(e) => setCpf(e.target.value)}
+                    placeholder="Digite seu CPF..."
+                    required
+                />
 
-                <Link to="/success">
-                    <button>Reservar Assento(s)</button>
-                </Link>
+                <button type="submit">Reservar Assento(s)</button>
             </FormContainer>
 
             <FooterContainer>
@@ -119,7 +171,7 @@ const SeatsContainer = styled.div`
     margin-top: 20px;
 `;
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
     width: calc(100vw - 40px); 
     display: flex;
     flex-direction: column;
@@ -162,8 +214,18 @@ const CaptionItem = styled.div`
 `;
 
 const SeatItem = styled.div`
-    border: 1px solid ${({ disabled, isSelected }) => disabled ? "#F7C52B" : isSelected ? "#0E7D71" : "#7B8B99"};
-    background-color: ${({ disabled, isSelected }) => disabled ? "#FBE192" : isSelected ? "#1AAE9E" : "#C3CFD9"};
+    border: 1px solid ${({ disabled, isSelected }) => disabled ?
+        BORDER_COLOR_UNAVAILABLE :
+        isSelected ?
+            BORDER_COLOR_SELECTED :
+            BORDER_COLOR_AVAILABLE
+    };
+    background-color: ${({ disabled, isSelected }) => disabled ?
+        BACKGROUND_COLOR_UNAVAILABLE :
+        isSelected ?
+            BACKGROUND_COLOR_SELECTED :
+            BACKGROUND_COLOR_AVAILABLE
+    };
     height: 25px;
     width: 25px;
     border-radius: 25px;
