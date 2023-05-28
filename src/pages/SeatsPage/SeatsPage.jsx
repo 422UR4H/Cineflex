@@ -96,7 +96,7 @@ export default function SeatsPage({ setBooking }) {
             <SeatsContainer>
                 {seats.map((s, i) => (
                     <SeatItem disabled={!s.isAvailable} isSelected={s.isSelected} key={s.id}>
-                        <span disabled={!s.isAvailable} onClick={(() => select(s, i))}>
+                        <span disabled={!s.isAvailable} onClick={(() => select(s, i))} data-test="seat">
                             {s.name}
                         </span>
                     </SeatItem>
@@ -135,6 +135,7 @@ export default function SeatsPage({ setBooking }) {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Digite seu nome..."
                     required
+                    data-test="client-name"
                 />
 
                 <label htmlFor="cpf">CPF do Comprador:</label>
@@ -144,12 +145,13 @@ export default function SeatsPage({ setBooking }) {
                     onChange={(e) => setCpf(e.target.value)}
                     placeholder="Digite seu CPF..."
                     required
+                    data-test="client-cpf"
                 />
 
-                <button type="submit">Reservar Assento(s)</button>
+                <button type="submit" data-test="book-seat-btn">Reservar Assento(s)</button>
             </FormContainer>
 
-            <FooterContainer>
+            <FooterContainer data-test="footer">
                 <div>
                     <img src={footer.posterURL} alt="poster" />
                 </div>
