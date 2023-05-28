@@ -52,6 +52,7 @@ export default function SeatsPage({ setBooking }) {
 
     function select(seat, i) {
         if (!seat.isAvailable) {
+            alert("Esse assento não está disponível");
             return;
         }
         const temp = [...seats];
