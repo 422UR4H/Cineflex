@@ -1,31 +1,71 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { URL_SHOWTIMES } from "../../scripts/constants";
 
 export default function SeatsPage() {
+    const { id } = useParams();
+    const [seats, setSeats] = useState(undefined);
+    const [footer, setFooter] = useState(undefined);
+
+    useEffect(() => {
+        const promise = axios.get(`${URL_SHOWTIMES}/${id}/seats`);
+
+        promise.then(({ data }) => {
+            const selected = [];
+
+            data.seats.forEach((s) => {
+                selected.push({ ...s, isSelected: false });
+            });
+            setSeats(selected);
+            setFooter({
+                posterURL: data.movie.posterURL,
+                title: data.movie.title,
+                weekday: data.day.weekday,
+                time: data.name
+            });
+        });
+        promise.catch((error) => console.log(error.response.data));
+    }, []);
+
+    function select(seat, i) {
+        if (!seat.isAvailable) {
+            return;
+        }
+        const temp = [...seats];
+
+        temp[i].isSelected = !seat.isSelected;
+        setSeats(temp);
+    }
+
+    if (!seats) {
+        return <>Carregando...</>;
+    }
 
     return (
         <PageContainer>
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+                {seats.map((s, i) => (
+                    <SeatItem disabled={!s.isAvailable} isSelected={s.isSelected} key={s.id}>
+                        <span disabled={!s.isAvailable} onClick={(() => select(s, i))}>{s.name}</span>
+                    </SeatItem>
+                ))}
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle backgroundColor={"#1AAE9E"} borderColor={"#0E7D71"} />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle backgroundColor={"#C3CFD9"} borderColor={"#7B8B99"} />
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle backgroundColor={"#FBE192"} borderColor={"#F7C52B"} />
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
@@ -44,11 +84,11 @@ export default function SeatsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={footer.posterURL} alt="poster" />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
+                    <p>{footer.title}</p>
+                    <p>{footer.weekday} - {footer.time}</p>
                 </div>
             </FooterContainer>
 
@@ -103,8 +143,8 @@ const CaptionContainer = styled.div`
 `;
 
 const CaptionCircle = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid ${({ borderColor }) => borderColor};
+    background-color: ${({ backgroundColor }) => backgroundColor};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -122,8 +162,8 @@ const CaptionItem = styled.div`
 `;
 
 const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid ${({ disabled, isSelected }) => disabled ? "#F7C52B" : isSelected ? "#0E7D71" : "#7B8B99"};
+    background-color: ${({ disabled, isSelected }) => disabled ? "#FBE192" : isSelected ? "#1AAE9E" : "#C3CFD9"};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -133,6 +173,11 @@ const SeatItem = styled.div`
     align-items: center;
     justify-content: center;
     margin: 5px 3px;
+
+    &:disabled {
+        border: #F7C52B;
+        background-color: #FBE192;
+    }
 `;
 
 const FooterContainer = styled.div`

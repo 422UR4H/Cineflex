@@ -31,8 +31,8 @@ export default function SessionsPage() {
                     <SessionContainer key={i}>
                         {d.weekday} - {d.date}
                         <ButtonsContainer>
-                            {d.showtimes.map((s, i) => (
-                                <Link key={i} to={`/seats/${s.id}`}>
+                            {d.showtimes.map((s) => (
+                                <Link key={s.id} to={`/seats/${s.id}`}>
                                     <button>{s.name}</button>
                                 </Link>
                             ))}
