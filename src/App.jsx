@@ -18,7 +18,7 @@ export default function App() {
     return (
         <BrowserRouter>
             <NavContainer>
-                <Button />
+                <Button data-test="go-home-header-btn" />
                 CINEFLEX
             </NavContainer>
 
