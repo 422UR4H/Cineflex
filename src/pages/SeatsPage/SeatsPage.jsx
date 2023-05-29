@@ -86,7 +86,7 @@ export default function SeatsPage({ setBooking }) {
         setBooking({
             movie,
             seats: seatsSelected,
-            client: { name: name, cpf: cpf }
+            client: { name, cpf }
         });
 
         navigate(`/sucesso`);

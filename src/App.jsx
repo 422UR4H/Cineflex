@@ -18,7 +18,7 @@ export default function App() {
     return (
         <BrowserRouter>
             <NavContainer>
-                <Button data-test="go-home-header-btn" />
+                <Button />
                 CINEFLEX
             </NavContainer>
 
@@ -38,7 +38,11 @@ function Button() {
     const isHomePage = location.pathname === "/";
 
     return (
-        <StyledButton onClick={() => navigate(-1)} disabled={isHomePage} isHomePage={isHomePage}>
+        <StyledButton onClick={() => navigate(-1)}
+            disabled={isHomePage}
+            isHomePage={isHomePage}
+            data-test="go-home-header-btn"
+        >
             <img src="../public/arrow-back-sharp.svg" />
         </StyledButton>
     );
