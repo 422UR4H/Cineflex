@@ -73,6 +73,11 @@ export default function SeatsPage({ setBooking }) {
             }
         });
 
+        if (idsSelected.length === 0) {
+            alert("Selecione pelo menos 1 assento!");
+            return;
+        }
+
         axios.post(URL_SEATS, {
             ids: idsSelected,
             name: name,
@@ -291,6 +296,7 @@ const FooterContainer = styled.div`
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        padding-right: 12px;
         p {
             text-align: left;
             &:nth-child(2) {

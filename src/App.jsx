@@ -51,6 +51,7 @@ const NavContainer = styled.div`
     font-size: 34px;
     width: 100%;
     height: 70px;
+    text-align: center;
 
     display: inline-grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -61,8 +62,8 @@ const NavContainer = styled.div`
     top: 0;
 
     a {
-        text-decoration: none;
         color: #E8833A;
+        text-decoration: none;
     }
 `;
 
